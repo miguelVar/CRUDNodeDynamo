@@ -9,6 +9,7 @@ jobs:
       - checkout
       - aws-cli/setup
       - serverless/setup
+      - run: npm install serverless-offline
       - run: sls deploy
 workflows:
   one_and_two:
