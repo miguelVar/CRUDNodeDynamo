@@ -9,6 +9,7 @@ jobs:
       - checkout
       - aws-cli/setup
       - serverless/setup
+      - override-ci-command: npm i
       - run: sls deploy
 workflows:
   one_and_two:
