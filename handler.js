@@ -4,12 +4,16 @@ const express = require('express');
 const app = express();
 const AWS = require('aws-sdk');
 const bodyParser = require('body-parser');
+const redis = require('redis');
 
 const USERS_TABLE = process.env.USERS_TABLE;
 const IS_OFFLINE = process.env.IS_OFFLINE;
 let dynamoDB;
-// const dynamoDB = new AWS.DynamoDB.DocumentClient();
 
+const clientRedis= redis.createClient(6379,'db-redis.97uprv.clustercfg.use2.cache.amazonaws.com');
+clientRedis.on('error',(err)=>{
+    console.log("Error" + err);
+});
 
 if (IS_OFFLINE === 'true') {
     dynamoDB = new AWS.DynamoDB.DocumentClient({
@@ -48,21 +52,33 @@ app.post('/users', (req, res) => {
 });
 
 app.get('/users', (req, res) => {
+    const userskey = 'user:data';
     const params = {
         TableName: USERS_TABLE,
     };
-    dynamoDB.scan(params, (error, result) => {
-        if (error) {
-            console.log(error);
-            res.status(400).json({
-                error: 'No se ha podido acceder a los usuarios'
-            })
-        } else {
-            const {Items} = result;
-            res.json({
+    return clientRedis.get(userskey, (err, users) => {
+        if (users) {
+            return res.json({
                 success: true,
                 message: 'Usuarios cargados correctamente',
-                users: Items
+                users: JSON.parse(users)
+            })
+        } else {
+            dynamoDB.scan(params, (error, result) => {
+                if (error) {
+                    console.log(error);
+                    res.status(400).json({
+                        error: 'No se ha podido acceder a los usuarios'
+                    })
+                } else {
+                    const {Items} = result;
+                    clientRedis.set(userskey, 3600, JSON.stringify(Items));
+                    res.json({
+                        success: true,
+                        message: 'Usuarios cargados correctamente',
+                        users: Items
+                    });
+                }
             });
         }
     })
