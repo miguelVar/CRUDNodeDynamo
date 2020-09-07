@@ -17,7 +17,7 @@ let dynamoDB;
  * @type {RedisClient}
  */
 const clientRedis = redis.createClient({
-    url: 'redis://db-redis.97uprv.clustercfg.use2.cache.amazonaws.com:6379'
+    url: 'redis://database-redis.v2uw3l.clustercfg.use1.cache.amazonaws.com:6379'
 });
 
 clientRedis.on('error', (err) => {
