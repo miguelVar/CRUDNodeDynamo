@@ -5,16 +5,28 @@ const app = express();
 const AWS = require('aws-sdk');
 const bodyParser = require('body-parser');
 const redis = require('redis');
+const TIME_VALUE=60;
 
 const USERS_TABLE = process.env.USERS_TABLE;
 const IS_OFFLINE = process.env.IS_OFFLINE;
+const userskey = 'users';
 let dynamoDB;
 
-const clientRedis = redis.createClient(6379, 'db-redis.97uprv.clustercfg.use2.cache.amazonaws.com:', {no_ready_check: true});
+/**
+ *
+ * @type {RedisClient}
+ */
+const clientRedis = redis.createClient({
+    url: 'redis://db-redis.97uprv.clustercfg.use2.cache.amazonaws.com:6379'
+});
+
 clientRedis.on('error', (err) => {
     console.log("Error" + err);
 });
 
+/**
+ * Validate environment
+ */
 if (IS_OFFLINE === 'true') {
     dynamoDB = new AWS.DynamoDB.DocumentClient({
         region: 'localhost',
@@ -26,6 +38,9 @@ if (IS_OFFLINE === 'true') {
 
 app.use(bodyParser.urlencoded({extend: true}));
 
+/**
+ * Petitions HTTP
+ */
 app.get('/', (req, res) => {
     res.send('Hola mundo desde express')
 });
@@ -51,8 +66,11 @@ app.post('/users', (req, res) => {
     res.json({userId, name})
 });
 
-app.get('/users', (req, res) => {
-    const userskey = 'user:data';
+const getCache = async (req, res, next) => {
+    return await getCache(userskey, req, res, next);
+};
+
+app.get('/users', getCache, async (req, res) => {
     const params = {
         TableName: USERS_TABLE,
     };
@@ -72,7 +90,8 @@ app.get('/users', (req, res) => {
             })
         } else {
             const {Items} = result;
-            clientRedis.set(userskey, 3600, JSON.stringify(Items));
+            setCache(userskey, Items);
+            // clientRedis.set(userskey, 3600, JSON.stringify(Items));
             res.json({
                 success: true,
                 message: 'Usuarios cargados correctamente',
@@ -110,5 +129,24 @@ app.get('/users/:userId', (req, res) => {
     })
 });
 
+const responseRedis = async (userskey, res, next) => {
+    return await clientRedis.get(userskey, (err, data) => {
+        console.log(err,data);
+        if (err){
+            next();
+        }
+        if (data != null){
+            console.log("Leyendo desde cache");
+            res.send(JSON.parse(data));
+        }else{
+            console.log("Llamado servicio real");
+            next();
+        }
+    });
+};
+
+const setCache = (key, value) =>{
+  clientRedis.setex(key,TIME_VALUE,JSON.stringify(value));
+};
 
 module.exports.generic = serverless(app);
