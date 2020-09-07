@@ -56,32 +56,32 @@ app.get('/users', (req, res) => {
     const params = {
         TableName: USERS_TABLE,
     };
-    // return clientRedis.get(userskey, (err, users) => {
-    //     if (users) {
-    //         return res.json({
-    //             success: true,
-    //             message: 'Usuarios cargados correctamente',
-    //             users: JSON.parse(users)
-    //         })
-    //     } else {
-    dynamoDB.scan(params, (error, result) => {
-        if (error) {
-            console.log(error);
-            res.status(400).json({
-                error: 'No se ha podido acceder a los usuarios'
-            })
-        } else {
-            const {Items} = result;
-            clientRedis.set(userskey, 3600, JSON.stringify(Items));
+    clientRedis.get(userskey, (err, users) => {
+        if (users) {
             res.json({
                 success: true,
                 message: 'Usuarios cargados correctamente',
-                users: Items
+                users: JSON.parse(users)
+            })
+        } else {
+            dynamoDB.scan(params, (error, result) => {
+                if (error) {
+                    console.log(error);
+                    res.status(400).json({
+                        error: 'No se ha podido acceder a los usuarios'
+                    })
+                } else {
+                    const {Items} = result;
+                    clientRedis.set(userskey, 3600, JSON.stringify(Items));
+                    res.json({
+                        success: true,
+                        message: 'Usuarios cargados correctamente',
+                        users: Items
+                    });
+                }
             });
         }
-    });
-    // }
-    // })
+    })
 });
 
 app.get('/users/:userId', (req, res) => {
