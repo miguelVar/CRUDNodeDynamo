@@ -70,18 +70,10 @@ const getCache = async (req, res, next) => {
     return await getCache(userskey, req, res, next);
 };
 
-app.get('/users', getCache, async (req, res) => {
+app.get('/users',(req, res) => {
     const params = {
         TableName: USERS_TABLE,
     };
-    // clientRedis.get(userskey, (err, users) => {
-    //     if (users) {
-    //         res.json({
-    //             success: true,
-    //             message: 'Usuarios cargados correctamente',
-    //             users: JSON.parse(users)
-    //         })
-    //     } else {
     dynamoDB.scan(params, (error, result) => {
         if (error) {
             console.log(error);
@@ -90,8 +82,7 @@ app.get('/users', getCache, async (req, res) => {
             })
         } else {
             const {Items} = result;
-            setCache(userskey, Items);
-            // clientRedis.set(userskey, 3600, JSON.stringify(Items));
+            // setCache(userskey, Items);
             res.json({
                 success: true,
                 message: 'Usuarios cargados correctamente',
@@ -99,8 +90,6 @@ app.get('/users', getCache, async (req, res) => {
             });
         }
     });
-    // }
-    // })
 });
 
 app.get('/users/:userId', (req, res) => {
