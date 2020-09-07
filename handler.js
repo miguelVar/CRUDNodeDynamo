@@ -10,7 +10,7 @@ const USERS_TABLE = process.env.USERS_TABLE;
 const IS_OFFLINE = process.env.IS_OFFLINE;
 let dynamoDB;
 
-const clientRedis= redis.createClient(6379,'db-redis.97uprv.clustercfg.use2.cache.amazonaws.com');
+const clientRedis= redis.createClient(6379,'db-redis.97uprv.clustercfg.use2.cache.amazonaws.com:', {no_ready_check: true});
 clientRedis.on('error',(err)=>{
     console.log("Error" + err);
 });
