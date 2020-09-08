@@ -118,7 +118,7 @@ app.get('/users/:userId', (req, res) => {
     })
 });
 
-const responseRedis = async (userskey, res, next) => {
+const responseRedis = async (userskey, req, res, next) => {
     return await clientRedis.get(userskey, (err, data) => {
         console.log(err,data);
         if (err){
