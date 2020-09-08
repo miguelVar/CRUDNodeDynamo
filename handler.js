@@ -6,10 +6,10 @@ const AWS = require('aws-sdk');
 const bodyParser = require('body-parser');
 const redis = require('redis');
 const TIME_VALUE=60;
+const userskey = 'users';
 
 const USERS_TABLE = process.env.USERS_TABLE;
 const IS_OFFLINE = process.env.IS_OFFLINE;
-const userskey = 'users';
 let dynamoDB;
 
 /**
@@ -137,5 +137,8 @@ const responseRedis = async (userskey, req, res, next) => {
 const setCache = (key, value) =>{
   clientRedis.setex(key,TIME_VALUE,JSON.stringify(value));
 };
+// const cleanCache = (key)=>{
+//   clientRedis.clean(key);
+// };
 
 module.exports.generic = serverless(app);
