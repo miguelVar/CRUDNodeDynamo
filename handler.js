@@ -70,7 +70,7 @@ const getCache = async (req, res, next) => {
     return await responseRedis(userskey, req, res, next);
 };
 
-app.get('/users',(req, res) => {
+app.get('/users',getCache,(req, res) => {
     const params = {
         TableName: USERS_TABLE,
     };
@@ -82,7 +82,7 @@ app.get('/users',(req, res) => {
             })
         } else {
             const {Items} = result;
-            // setCache(userskey, Items);
+            setCache(userskey, Items);
             res.json({
                 success: true,
                 message: 'Usuarios cargados correctamente Dynamo',
