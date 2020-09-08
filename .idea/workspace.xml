@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="30188568-b7b8-4cde-84d8-ba3899ba07b9" name="Default Changelist" comment="" />
+    <list default="true" id="30188568-b7b8-4cde-84d8-ba3899ba07b9" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -39,7 +41,7 @@
       <workItem from="1598998648677" duration="9132000" />
       <workItem from="1599145717413" duration="5728000" />
       <workItem from="1599232907305" duration="1248000" />
-      <workItem from="1599487809098" duration="18762000" />
+      <workItem from="1599487809098" duration="19406000" />
     </task>
     <servers />
   </component>
@@ -72,6 +74,10 @@
       <screen x="1366" y="0" width="1920" height="1040" />
     </state>
     <state x="1847" y="97" key="SettingsEditor/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1599515631683" />
+    <state x="1458" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.FileHistoryDialog" timestamp="1599569224833">
+      <screen x="1366" y="0" width="1920" height="1040" />
+    </state>
+    <state x="1458" y="92" width="1736" height="856" key="com.intellij.history.integration.ui.views.FileHistoryDialog/0.0.1366.728/1366.0.1920.1040@1366.0.1920.1040" timestamp="1599569224833" />
     <state x="379" y="96" width="607" height="536" key="find.popup" timestamp="1599005102946">
       <screen x="0" y="0" width="1366" height="728" />
     </state>
