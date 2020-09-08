@@ -126,7 +126,11 @@ const responseRedis = async (userskey, req, res, next) => {
         }
         if (data != null){
             console.log("Leyendo desde cache");
-            res.send(JSON.parse(data));
+            res.json({
+                success: true,
+                message: 'Usuarios cargados correctamente Redis',
+                users:data
+            });
 
         }else{
             console.log("Llamado servicio real");
